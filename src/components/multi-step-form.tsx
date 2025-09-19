@@ -15,38 +15,80 @@ interface FormData {
   fullName: string;
   email: string;
   phone: string;
+  age: string;
   
-  // Step 2: Current Situation
+  // Step 2: Location & Market Context
+  country: string;
+  city: string;
+  willingToRelocate: string;
+  preferredWorkMode: string;
+  
+  // Step 3: Professional Experience
   employmentStatus: string;
-  location: string;
+  yearsOfExperience: string;
+  currentJobTitle: string;
+  previousIndustries: string;
+  educationLevel: string;
   
-  // Step 3: Career Goals
+  // Step 4: Career Goals & Aspirations
   desiredJobTitle: string;
   targetIndustry: string;
-  salaryExpectation: string;
+  careerGoals: string;
+  timelineForJobSearch: string;
   
-  // Step 4: Resume Upload
+  // Step 5: Compensation & Benefits
+  salaryExpectation: string;
+  salaryPriority: string;
+  benefitsPriorities: string;
+  
+  // Step 6: Skills & Development
+  keySkills: string;
+  skillsToImprove: string;
+  certifications: string;
+  languagesSpoken: string;
+  
+  // Step 7: Resume Upload
   resumeFile: File | null;
   
-  // Step 5: Additional Info
+  // Step 8: Job Search Strategy
   careerChallenges: string;
   resumeTailoringFrequency: string;
   targetCompanies: string;
+  jobSearchMethods: string;
+  networkingEfforts: string;
 }
 
 const initialFormData: FormData = {
   fullName: "",
   email: "",
   phone: "",
+  age: "",
+  country: "",
+  city: "",
+  willingToRelocate: "",
+  preferredWorkMode: "",
   employmentStatus: "",
-  location: "",
+  yearsOfExperience: "",
+  currentJobTitle: "",
+  previousIndustries: "",
+  educationLevel: "",
   desiredJobTitle: "",
   targetIndustry: "",
+  careerGoals: "",
+  timelineForJobSearch: "",
   salaryExpectation: "",
+  salaryPriority: "",
+  benefitsPriorities: "",
+  keySkills: "",
+  skillsToImprove: "",
+  certifications: "",
+  languagesSpoken: "",
   resumeFile: null,
   careerChallenges: "",
   resumeTailoringFrequency: "",
   targetCompanies: "",
+  jobSearchMethods: "",
+  networkingEfforts: "",
 };
 
 export default function MultiStepForm() {
@@ -54,7 +96,7 @@ export default function MultiStepForm() {
   const [formData, setFormData] = useState<FormData>(initialFormData);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const totalSteps = 6;
+  const totalSteps = 9;
   const progress = (currentStep / totalSteps) * 100;
 
   const updateFormData = (field: keyof FormData, value: string | File | null) => {
@@ -114,9 +156,24 @@ export default function MultiStepForm() {
                 type="tel"
                 value={formData.phone}
                 onChange={(e) => updateFormData("phone", e.target.value)}
-                placeholder="+1 (555) 123-4567"
+                placeholder="+234 (0) 123-456-789"
                 className="h-12"
               />
+            </div>
+            <div className="space-y-4">
+              <Label className="text-base font-medium">Age Range *</Label>
+              <RadioGroup
+                value={formData.age}
+                onValueChange={(value) => updateFormData("age", value)}
+                className="grid grid-cols-2 gap-4"
+              >
+                {["18-22", "23-26", "27-30", "31-34"].map((ageRange) => (
+                  <div key={ageRange} className="flex items-center space-x-2">
+                    <RadioGroupItem value={ageRange} id={ageRange} />
+                    <Label htmlFor={ageRange} className="cursor-pointer">{ageRange}</Label>
+                  </div>
+                ))}
+              </RadioGroup>
             </div>
           </div>
         );
@@ -124,14 +181,79 @@ export default function MultiStepForm() {
       case 2:
         return (
           <div className="space-y-6">
+            <div className="space-y-2">
+              <Label htmlFor="country">Country *</Label>
+              <Input
+                id="country"
+                value={formData.country}
+                onChange={(e) => updateFormData("country", e.target.value)}
+                placeholder="Nigeria"
+                className="h-12"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="city">City *</Label>
+              <Input
+                id="city"
+                value={formData.city}
+                onChange={(e) => updateFormData("city", e.target.value)}
+                placeholder="Lagos"
+                className="h-12"
+              />
+            </div>
             <div className="space-y-4">
-              <Label className="text-base font-medium">Employment Status</Label>
+              <Label className="text-base font-medium">Willing to relocate for the right opportunity?</Label>
+              <RadioGroup
+                value={formData.willingToRelocate}
+                onValueChange={(value) => updateFormData("willingToRelocate", value)}
+                className="grid grid-cols-3 gap-4"
+              >
+                {["Yes", "No", "Maybe"].map((option) => (
+                  <div key={option} className="flex items-center space-x-2">
+                    <RadioGroupItem value={option} id={`relocate-${option}`} />
+                    <Label htmlFor={`relocate-${option}`} className="cursor-pointer">{option}</Label>
+                  </div>
+                ))}
+              </RadioGroup>
+            </div>
+            <div className="space-y-4">
+              <Label className="text-base font-medium">Preferred work mode</Label>
+              <RadioGroup
+                value={formData.preferredWorkMode}
+                onValueChange={(value) => updateFormData("preferredWorkMode", value)}
+                className="grid grid-cols-1 gap-3"
+              >
+                {["Remote", "Hybrid", "On-site", "No preference"].map((mode) => (
+                  <div key={mode} className="flex items-center space-x-2">
+                    <RadioGroupItem value={mode} id={`work-${mode}`} />
+                    <Label htmlFor={`work-${mode}`} className="cursor-pointer">{mode}</Label>
+                  </div>
+                ))}
+              </RadioGroup>
+            </div>
+          </div>
+        );
+
+      case 3:
+        return (
+          <div className="space-y-6">
+            <div className="space-y-4">
+              <Label className="text-base font-medium">Current Employment Status *</Label>
               <RadioGroup
                 value={formData.employmentStatus}
                 onValueChange={(value) => updateFormData("employmentStatus", value)}
-                className="grid grid-cols-2 gap-4"
+                className="grid grid-cols-1 gap-3"
               >
-                {["Employed", "Unemployed", "Student", "Other"].map((status) => (
+                {[
+                  "Employed full-time",
+                  "Employed part-time",
+                  "Unemployed (actively searching)",
+                  "Unemployed (not actively searching)",
+                  "Student",
+                  "Recent graduate",
+                  "Freelancer/Contractor",
+                  "Career break/Gap year"
+                ].map((status) => (
                   <div key={status} className="flex items-center space-x-2">
                     <RadioGroupItem value={status} id={status} />
                     <Label htmlFor={status} className="cursor-pointer">{status}</Label>
@@ -139,56 +261,212 @@ export default function MultiStepForm() {
                 ))}
               </RadioGroup>
             </div>
+            <div className="space-y-4">
+              <Label className="text-base font-medium">Years of professional experience</Label>
+              <RadioGroup
+                value={formData.yearsOfExperience}
+                onValueChange={(value) => updateFormData("yearsOfExperience", value)}
+                className="grid grid-cols-2 gap-4"
+              >
+                {["0-1 years", "2-3 years", "4-6 years", "7+ years"].map((years) => (
+                  <div key={years} className="flex items-center space-x-2">
+                    <RadioGroupItem value={years} id={years} />
+                    <Label htmlFor={years} className="cursor-pointer">{years}</Label>
+                  </div>
+                ))}
+              </RadioGroup>
+            </div>
             <div className="space-y-2">
-              <Label htmlFor="location">Location (City, Country) *</Label>
+              <Label htmlFor="currentJobTitle">Current/Most Recent Job Title</Label>
               <Input
-                id="location"
-                value={formData.location}
-                onChange={(e) => updateFormData("location", e.target.value)}
-                placeholder="Lagos, Nigeria"
+                id="currentJobTitle"
+                value={formData.currentJobTitle}
+                onChange={(e) => updateFormData("currentJobTitle", e.target.value)}
+                placeholder="e.g., Junior Software Developer, Sales Associate"
                 className="h-12"
               />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="previousIndustries">Industries you've worked in</Label>
+              <Input
+                id="previousIndustries"
+                value={formData.previousIndustries}
+                onChange={(e) => updateFormData("previousIndustries", e.target.value)}
+                placeholder="e.g., Technology, Banking, Retail, Healthcare"
+                className="h-12"
+              />
+            </div>
+            <div className="space-y-4">
+              <Label className="text-base font-medium">Highest level of education</Label>
+              <RadioGroup
+                value={formData.educationLevel}
+                onValueChange={(value) => updateFormData("educationLevel", value)}
+                className="grid grid-cols-1 gap-3"
+              >
+                {[
+                  "High school/Secondary school",
+                  "Diploma/Certificate",
+                  "Bachelor's degree",
+                  "Master's degree",
+                  "PhD/Doctorate",
+                  "Other"
+                ].map((education) => (
+                  <div key={education} className="flex items-center space-x-2">
+                    <RadioGroupItem value={education} id={education} />
+                    <Label htmlFor={education} className="cursor-pointer">{education}</Label>
+                  </div>
+                ))}
+              </RadioGroup>
             </div>
           </div>
         );
 
-      case 3:
+      case 4:
         return (
-          <div className="space-y-4">
+          <div className="space-y-6">
             <div className="space-y-2">
               <Label htmlFor="desiredJobTitle">Desired Job Title *</Label>
               <Input
                 id="desiredJobTitle"
                 value={formData.desiredJobTitle}
                 onChange={(e) => updateFormData("desiredJobTitle", e.target.value)}
-                placeholder="e.g., Software Engineer, Marketing Manager"
+                placeholder="e.g., Software Engineer, Digital Marketing Manager"
                 className="h-12"
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="targetIndustry">Target Industry</Label>
+              <Label htmlFor="targetIndustry">Target Industry *</Label>
               <Input
                 id="targetIndustry"
                 value={formData.targetIndustry}
                 onChange={(e) => updateFormData("targetIndustry", e.target.value)}
-                placeholder="e.g., Technology, Finance, Healthcare"
+                placeholder="e.g., Fintech, E-commerce, Healthcare, Oil & Gas"
                 className="h-12"
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="salaryExpectation">Salary Expectation</Label>
+              <Label htmlFor="careerGoals">What are your main career goals? *</Label>
+              <Textarea
+                id="careerGoals"
+                value={formData.careerGoals}
+                onChange={(e) => updateFormData("careerGoals", e.target.value)}
+                placeholder="e.g., Lead a team, transition into tech, start my own business, work for a multinational company"
+                className="h-24 resize-none"
+              />
+            </div>
+            <div className="space-y-4">
+              <Label className="text-base font-medium">Timeline for landing your next role</Label>
+              <RadioGroup
+                value={formData.timelineForJobSearch}
+                onValueChange={(value) => updateFormData("timelineForJobSearch", value)}
+                className="grid grid-cols-2 gap-4"
+              >
+                {["Immediately", "1-3 months", "3-6 months", "6+ months"].map((timeline) => (
+                  <div key={timeline} className="flex items-center space-x-2">
+                    <RadioGroupItem value={timeline} id={timeline} />
+                    <Label htmlFor={timeline} className="cursor-pointer">{timeline}</Label>
+                  </div>
+                ))}
+              </RadioGroup>
+            </div>
+          </div>
+        );
+
+      case 5:
+        return (
+          <div className="space-y-6">
+            <div className="space-y-2">
+              <Label htmlFor="salaryExpectation">Salary Expectation (in local currency)</Label>
               <Input
                 id="salaryExpectation"
                 value={formData.salaryExpectation}
                 onChange={(e) => updateFormData("salaryExpectation", e.target.value)}
-                placeholder="e.g., $50,000 - $70,000"
+                placeholder="e.g., ₦200,000 - ₦400,000 monthly"
+                className="h-12"
+              />
+            </div>
+            <div className="space-y-4">
+              <Label className="text-base font-medium">What's most important to you in compensation?</Label>
+              <RadioGroup
+                value={formData.salaryPriority}
+                onValueChange={(value) => updateFormData("salaryPriority", value)}
+                className="grid grid-cols-1 gap-3"
+              >
+                {[
+                  "High base salary",
+                  "Performance bonuses",
+                  "Benefits & perks",
+                  "Work-life balance",
+                  "Learning opportunities",
+                  "Career growth potential"
+                ].map((priority) => (
+                  <div key={priority} className="flex items-center space-x-2">
+                    <RadioGroupItem value={priority} id={priority} />
+                    <Label htmlFor={priority} className="cursor-pointer">{priority}</Label>
+                  </div>
+                ))}
+              </RadioGroup>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="benefitsPriorities">Most important benefits to you</Label>
+              <Textarea
+                id="benefitsPriorities"
+                value={formData.benefitsPriorities}
+                onChange={(e) => updateFormData("benefitsPriorities", e.target.value)}
+                placeholder="e.g., Health insurance, remote work options, professional development budget, pension"
+                className="h-20 resize-none"
+              />
+            </div>
+          </div>
+        );
+
+      case 6:
+        return (
+          <div className="space-y-6">
+            <div className="space-y-2">
+              <Label htmlFor="keySkills">Your key skills and strengths *</Label>
+              <Textarea
+                id="keySkills"
+                value={formData.keySkills}
+                onChange={(e) => updateFormData("keySkills", e.target.value)}
+                placeholder="e.g., Python, Project Management, Digital Marketing, Financial Analysis, Customer Service"
+                className="h-24 resize-none"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="skillsToImprove">Skills you want to develop or improve</Label>
+              <Textarea
+                id="skillsToImprove"
+                value={formData.skillsToImprove}
+                onChange={(e) => updateFormData("skillsToImprove", e.target.value)}
+                placeholder="e.g., Data analysis, Public speaking, Leadership, Cloud computing"
+                className="h-20 resize-none"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="certifications">Relevant certifications or courses completed</Label>
+              <Input
+                id="certifications"
+                value={formData.certifications}
+                onChange={(e) => updateFormData("certifications", e.target.value)}
+                placeholder="e.g., Google Analytics, PMP, AWS, CPA"
+                className="h-12"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="languagesSpoken">Languages you speak fluently</Label>
+              <Input
+                id="languagesSpoken"
+                value={formData.languagesSpoken}
+                onChange={(e) => updateFormData("languagesSpoken", e.target.value)}
+                placeholder="e.g., English, Yoruba, French, Hausa"
                 className="h-12"
               />
             </div>
           </div>
         );
 
-      case 4:
+      case 7:
         return (
           <div className="space-y-6">
             <div className="text-center">
@@ -228,27 +506,31 @@ export default function MultiStepForm() {
           </div>
         );
 
-      case 5:
+      case 8:
         return (
           <div className="space-y-6">
             <div className="space-y-2">
-              <Label htmlFor="careerChallenges">What's your biggest career challenge?</Label>
+              <Label htmlFor="careerChallenges">What's your biggest career challenge right now?</Label>
               <Textarea
                 id="careerChallenges"
                 value={formData.careerChallenges}
                 onChange={(e) => updateFormData("careerChallenges", e.target.value)}
-                placeholder="e.g., Getting interviews, standing out from other candidates, career transition..."
+                placeholder="e.g., Getting interviews, standing out from candidates, career transition, salary negotiation"
                 className="h-24 resize-none"
               />
             </div>
             <div className="space-y-4">
-              <Label className="text-base font-medium">How often do you tailor your resume?</Label>
+              <Label className="text-base font-medium">How often do you tailor your resume for different jobs?</Label>
               <RadioGroup
                 value={formData.resumeTailoringFrequency}
                 onValueChange={(value) => updateFormData("resumeTailoringFrequency", value)}
                 className="grid grid-cols-1 gap-3"
               >
-                {["Never", "Sometimes", "Always"].map((frequency) => (
+                {[
+                  "Never - I use the same resume for all applications",
+                  "Sometimes - for jobs I really want",
+                  "Always - I customize for each application"
+                ].map((frequency) => (
                   <div key={frequency} className="flex items-center space-x-2">
                     <RadioGroupItem value={frequency} id={`freq-${frequency}`} />
                     <Label htmlFor={`freq-${frequency}`} className="cursor-pointer">{frequency}</Label>
@@ -257,19 +539,51 @@ export default function MultiStepForm() {
               </RadioGroup>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="targetCompanies">Target Companies (Optional)</Label>
+              <Label htmlFor="targetCompanies">Dream companies or types of organizations</Label>
               <Input
                 id="targetCompanies"
                 value={formData.targetCompanies}
                 onChange={(e) => updateFormData("targetCompanies", e.target.value)}
-                placeholder="e.g., Google, Microsoft, Startups in Lagos"
+                placeholder="e.g., Flutterwave, MTN, International NGOs, Tech startups"
                 className="h-12"
+              />
+            </div>
+            <div className="space-y-4">
+              <Label className="text-base font-medium">How do you typically search for jobs?</Label>
+              <RadioGroup
+                value={formData.jobSearchMethods}
+                onValueChange={(value) => updateFormData("jobSearchMethods", value)}
+                className="grid grid-cols-1 gap-3"
+              >
+                {[
+                  "Online job boards (LinkedIn, Indeed, etc.)",
+                  "Company websites directly",
+                  "Recruitment agencies",
+                  "Networking and referrals",
+                  "Social media",
+                  "Career fairs and events"
+                ].map((method) => (
+                  <div key={method} className="flex items-center space-x-2">
+                    <RadioGroupItem value={method} id={method} />
+                    <Label htmlFor={method} className="cursor-pointer">{method}</Label>
+                  </div>
+                ))}
+              </RadioGroup>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="networkingEfforts">How do you network or build professional connections?</Label>
+              <Textarea
+                id="networkingEfforts"
+                value={formData.networkingEfforts}
+                onChange={(e) => updateFormData("networkingEfforts", e.target.value)}
+                placeholder="e.g., LinkedIn engagement, industry events, alumni networks, professional associations"
+                className="h-20 resize-none"
               />
             </div>
           </div>
         );
 
-      case 6:
+      case 9:
         return (
           <div className="text-center space-y-6">
             <div className="w-20 h-20 bg-gradient-brand rounded-full flex items-center justify-center mx-auto">
@@ -278,7 +592,7 @@ export default function MultiStepForm() {
             <div>
               <h3 className="text-2xl font-bold mb-2">🎉 Your Audit is Complete!</h3>
               <p className="text-muted-foreground mb-6">
-                We've analyzed your resume and created a comprehensive improvement plan.
+                We've analyzed your profile and created a comprehensive improvement plan tailored to your career stage and goals.
               </p>
             </div>
             <div className="bg-gradient-subtle rounded-lg p-6 text-left space-y-4">
@@ -290,7 +604,15 @@ export default function MultiStepForm() {
                 </li>
                 <li className="flex items-center gap-2">
                   <div className="w-2 h-2 bg-primary rounded-full"></div>
-                  Keyword analysis for your target role
+                  Location-specific job market insights
+                </li>
+                <li className="flex items-center gap-2">
+                  <div className="w-2 h-2 bg-primary rounded-full"></div>
+                  Age and experience-tailored advice
+                </li>
+                <li className="flex items-center gap-2">
+                  <div className="w-2 h-2 bg-primary rounded-full"></div>
+                  Industry-specific keyword optimization
                 </li>
                 <li className="flex items-center gap-2">
                   <div className="w-2 h-2 bg-primary rounded-full"></div>
@@ -298,7 +620,7 @@ export default function MultiStepForm() {
                 </li>
                 <li className="flex items-center gap-2">
                   <div className="w-2 h-2 bg-primary rounded-full"></div>
-                  Content enhancement suggestions
+                  Career transition strategies (if applicable)
                 </li>
               </ul>
             </div>
@@ -330,7 +652,7 @@ export default function MultiStepForm() {
           <div className="mb-8">
             <div className="flex justify-between text-sm text-muted-foreground mb-2">
               <span>Step {currentStep} of {totalSteps - 1}</span>
-              <span>{Math.round(progress)}% Complete</span>
+              <span>{Math.round((currentStep / (totalSteps - 1)) * 100)}% Complete</span>
             </div>
             <Progress value={progress} className="h-2" />
           </div>
@@ -341,11 +663,14 @@ export default function MultiStepForm() {
           <CardHeader>
             <CardTitle className="text-xl">
               {currentStep === 1 && "Tell us about yourself"}
-              {currentStep === 2 && "Your current situation"}
-              {currentStep === 3 && "Your career goals"}
-              {currentStep === 4 && "Upload your resume"}
-              {currentStep === 5 && "Quick career assessment"}
-              {currentStep === 6 && "Your Results"}
+              {currentStep === 2 && "Location & work preferences"}
+              {currentStep === 3 && "Professional background"}
+              {currentStep === 4 && "Career aspirations"}
+              {currentStep === 5 && "Compensation preferences"}
+              {currentStep === 6 && "Skills & development"}
+              {currentStep === 7 && "Upload your resume"}
+              {currentStep === 8 && "Job search strategy"}
+              {currentStep === 9 && "Your Results"}
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
